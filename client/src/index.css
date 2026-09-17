@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #F2F2F2;
+    color: #312F30;
+    font-feature-settings: "tnum" on, "cv02" on, "cv03" on, "cv04" on;
+  }
+
+  /* Dense operational tabular data styling */
+  table {
+    border-collapse: collapse;
+  }
+
+  /* High contrast scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #E5E5E5;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #A0A0A0;
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ED1B24;
+  }
+}
+
+.rail-glow {
+  box-shadow: 0 0 12px rgba(237, 27, 36, 0.25);
+}
+
+.rail-border-active {
+  border-left: 4px solid #ED1B24;
+}
+
+/* Subtle ambient train movement across hero banner (scaled for 2.5x larger silhouette) */
+@keyframes trainPass {
+  0% {
+    transform: translateX(-1250px);
+  }
+  100% {
+    transform: translateX(100vw);
+  }
+}
+
+.animate-train {
+  animation: trainPass 14s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-train {
+    animation: none !important;
+    transform: translateX(5vw);
+  }
+}

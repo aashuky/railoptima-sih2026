@@ -1,0 +1,14 @@
+{
+  "name": "railoptima-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RailOptima - AI-Powered Automatic Block Planning for Indian Railways",
+  "scripts": {
+    "server": "cd server && npm start",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
