@@ -39,7 +39,7 @@ export default function DepartmentBadge({ department, showFullName = false }) {
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider border ${config.bg} ${config.text} ${config.border}`}
+      className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wider border ${config.bg} ${config.text} ${config.border}`}
       title={config.title}
     >
       {showFullName ? config.title : config.short}

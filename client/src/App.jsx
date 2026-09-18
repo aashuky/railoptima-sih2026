@@ -22,9 +22,20 @@ export default function App() {
     setUser(null);
   };
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [activeTab]);
+
   const handleNavigateToOptimizer = (taskIds = []) => {
     setSelectedTaskIdsForOptimizer(taskIds);
     setActiveTab("optimizer");
+  };
+
+  const handleNavigateToTab = (tab, taskIds = []) => {
+    if (taskIds && taskIds.length > 0) {
+      setSelectedTaskIdsForOptimizer(taskIds);
+    }
+    setActiveTab(tab);
   };
 
   const handleResetComplete = () => {
@@ -52,18 +63,23 @@ export default function App() {
         onLogout={handleLogout}
       />
 
-      {/* Main Content Area */}
+      {/* Main Content Area with Smooth Page Transition */}
       <main className="flex-1" key={refreshKey}>
-        {activeTab === "dashboard" && (
-          <Dashboard onNavigateToOptimizer={handleNavigateToOptimizer} />
-        )}
-        {activeTab === "optimizer" && (
-          <Optimizer
-            initialTaskIds={selectedTaskIdsForOptimizer}
-            onPlanApproved={handlePlanApproved}
-          />
-        )}
-        {activeTab === "plans" && <BlockPlans />}
+        <div key={activeTab} className="animate-page-enter">
+          {activeTab === "dashboard" && (
+            <Dashboard
+              onNavigateToOptimizer={handleNavigateToOptimizer}
+              onNavigateToTab={handleNavigateToTab}
+            />
+          )}
+          {activeTab === "optimizer" && (
+            <Optimizer
+              initialTaskIds={selectedTaskIdsForOptimizer}
+              onPlanApproved={handlePlanApproved}
+            />
+          )}
+          {activeTab === "plans" && <BlockPlans />}
+        </div>
       </main>
 
       {/* Operational Footer */}

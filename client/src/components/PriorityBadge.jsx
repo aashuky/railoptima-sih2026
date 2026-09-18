@@ -26,7 +26,7 @@ export default function PriorityBadge({ priority }) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider border ${config.bg} ${config.text} ${config.border}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wider border ${config.bg} ${config.text} ${config.border}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.indicator}`} />
       {priority}
