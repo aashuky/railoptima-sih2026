@@ -9,7 +9,18 @@ const INITIAL_CORRIDORS = [
     division: "Simulated Division 1",
     electrification: "25 kV AC Overhead Catenary",
     lineType: "Double Line High-Density Route (Simulated)",
-    maxSpeedKmH: 160
+    maxSpeedKmH: 160,
+    blockStatus: "Planned Block",
+    coordinates: [
+      [28.6139, 77.2090],
+      [28.6692, 77.4538],
+      [27.8974, 78.0880]
+    ],
+    stations: [
+      { name: "Junction Alpha", code: "JNA", coordinates: [28.6139, 77.2090] },
+      { name: "Alpha Mid (Ghaziabad)", code: "AMS", coordinates: [28.6692, 77.4538] },
+      { name: "Junction Beta (Aligarh)", code: "JNB", coordinates: [27.8974, 78.0880] }
+    ]
   },
   {
     id: "C02",
@@ -18,7 +29,18 @@ const INITIAL_CORRIDORS = [
     division: "Simulated Division 2",
     electrification: "25 kV AC Overhead Catenary",
     lineType: "Dedicated Freight / Quad Line (Simulated)",
-    maxSpeedKmH: 130
+    maxSpeedKmH: 130,
+    blockStatus: "Blocked Now",
+    coordinates: [
+      [21.1458, 79.0882],
+      [20.8900, 78.7800],
+      [20.7380, 78.5900]
+    ],
+    stations: [
+      { name: "Junction Gamma (Nagpur)", code: "JNG", coordinates: [21.1458, 79.0882] },
+      { name: "Gamma Mid (Sewagram)", code: "GMS", coordinates: [20.8900, 78.7800] },
+      { name: "Junction Delta (Wardha)", code: "JND", coordinates: [20.7380, 78.5900] }
+    ]
   },
   {
     id: "C03",
@@ -27,7 +49,18 @@ const INITIAL_CORRIDORS = [
     division: "Simulated Division 3",
     electrification: "25 kV AC Overhead Catenary",
     lineType: "Double Line Fast Corridor (Simulated)",
-    maxSpeedKmH: 140
+    maxSpeedKmH: 140,
+    blockStatus: "Free",
+    coordinates: [
+      [22.3072, 73.1812],
+      [21.7051, 72.9959],
+      [21.1702, 72.8311]
+    ],
+    stations: [
+      { name: "Junction Epsilon (Vadodara)", code: "JNE", coordinates: [22.3072, 73.1812] },
+      { name: "Epsilon Mid (Bharuch)", code: "EMS", coordinates: [21.7051, 72.9959] },
+      { name: "Junction Zeta (Surat)", code: "JNZ", coordinates: [21.1702, 72.8311] }
+    ]
   }
 ];
 
@@ -52,7 +85,9 @@ const INITIAL_TASKS = [
     requestedDate: "2026-09-18",
     equipmentRequired: ["Rail Grinding Machine (RGM)", "Weld Flash-Butt Rig"],
     speedRestrictionKmH: 30,
-    safetyNotes: "Requires traffic disconnection on UP Main track."
+    safetyNotes: "Requires traffic disconnection on UP Main track.",
+    coordinates: [28.6415, 77.3314],
+    overdueDays: 2
   },
   {
     id: "T002",
@@ -70,7 +105,9 @@ const INITIAL_TASKS = [
     requestedDate: "2026-09-18",
     equipmentRequired: ["Relay Diagnostic Analyzer", "Point Drive Gauge"],
     speedRestrictionKmH: 0,
-    safetyNotes: "Requires signal disconnection; fail-safe clamp on point switch 42A."
+    safetyNotes: "Requires signal disconnection; fail-safe clamp on point switch 42A.",
+    coordinates: [28.6250, 77.2500],
+    overdueDays: 4
   },
   {
     id: "T003",
@@ -88,7 +125,9 @@ const INITIAL_TASKS = [
     requestedDate: "2026-09-18",
     equipmentRequired: ["Tower Wagon OHE", "Discharge Rod Earth Rigs"],
     speedRestrictionKmH: 0,
-    safetyNotes: "Requires 25kV power block and track possession for tower wagon."
+    safetyNotes: "Requires 25kV power block and track possession for tower wagon.",
+    coordinates: [28.6550, 77.3800],
+    overdueDays: 0
   },
   {
     id: "T004",
@@ -106,7 +145,9 @@ const INITIAL_TASKS = [
     requestedDate: "2026-09-19",
     equipmentRequired: ["Track Tamping Machine (CSM)", "Crane Rig"],
     speedRestrictionKmH: 20,
-    safetyNotes: "Complete traffic block needed on DN mainline."
+    safetyNotes: "Complete traffic block needed on DN mainline.",
+    coordinates: [21.1200, 79.0400],
+    overdueDays: 3
   },
   {
     id: "T005",
@@ -124,7 +165,9 @@ const INITIAL_TASKS = [
     requestedDate: "2026-09-19",
     equipmentRequired: ["High-Frequency Signal Meter", "Track Coupler Clamp"],
     speedRestrictionKmH: 0,
-    safetyNotes: "Requires track possession alongside TMS track work."
+    safetyNotes: "Requires track possession alongside TMS track work.",
+    coordinates: [20.9500, 78.8500],
+    overdueDays: 1
   },
   {
     id: "T006",
@@ -142,7 +185,9 @@ const INITIAL_TASKS = [
     requestedDate: "2026-09-22",
     equipmentRequired: ["OHE Ladder Trolley", "Earthing Spikes"],
     speedRestrictionKmH: 0,
-    safetyNotes: "Power block required."
+    safetyNotes: "Power block required.",
+    coordinates: [28.3200, 77.7500],
+    overdueDays: 0
   },
   {
     id: "T007",
@@ -160,7 +205,9 @@ const INITIAL_TASKS = [
     requestedDate: "2026-09-25",
     equipmentRequired: ["Ballast Cleaning Machine (BCM)", "Unimat Tamper"],
     speedRestrictionKmH: 15,
-    safetyNotes: "4-hour continuous window required."
+    safetyNotes: "4-hour continuous window required.",
+    coordinates: [21.8500, 73.0500],
+    overdueDays: 5
   }
 ];
 

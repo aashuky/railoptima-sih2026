@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RotateCcw, Activity, ShieldCheck, Layers, GitMerge, CalendarDays, LogOut, User } from "lucide-react";
+import { RotateCcw, Activity, ShieldCheck, Layers, GitMerge, CalendarDays, LogOut, User, MapPin } from "lucide-react";
 import { resetDemoData } from "../services/api";
 import logoCircle from "../assets/logo-circle.jpg";
 
@@ -24,6 +24,7 @@ export default function Header({ activeTab, setActiveTab, onResetComplete, user,
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: Layers },
+    { id: "map", label: "Corridor Map", icon: MapPin },
     { id: "optimizer", label: "AI Block Optimizer", icon: GitMerge },
     { id: "plans", label: "Block Plans", icon: CalendarDays }
   ];

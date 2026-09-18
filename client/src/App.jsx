@@ -1,10 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Header from "./components/Header";
 import Dashboard from "./pages/Dashboard";
 import Optimizer from "./pages/Optimizer";
 import BlockPlans from "./pages/BlockPlans";
 import Login from "./pages/Login";
 import { ShieldCheck, RotateCcw } from "lucide-react";
+
+// Lazy-load the Map tab to keep bundle small and page switches snappy
+const CorridorMap = React.lazy(() => import("./pages/CorridorMap"));
+
+function MapSkeleton() {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+      <div className="h-16 bg-white border border-[#CBD5E1] rounded-md animate-pulse" />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-20 bg-white border border-[#CBD5E1] rounded-md animate-pulse" />
+        ))}
+      </div>
+      <div className="h-[540px] bg-white border border-[#CBD5E1] rounded-md flex items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-8 h-8 rounded-full border-2 border-[#1976D2] border-t-transparent animate-spin" />
+          <span className="text-xs font-bold uppercase tracking-wider text-[#071F4D]">
+            Loading Railway Telemetry Map...
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   // Always start from the login page on app launch
@@ -71,6 +95,11 @@ export default function App() {
               onNavigateToOptimizer={handleNavigateToOptimizer}
               onNavigateToTab={handleNavigateToTab}
             />
+          )}
+          {activeTab === "map" && (
+            <Suspense fallback={<MapSkeleton />}>
+              <CorridorMap onNavigateToOptimizer={handleNavigateToOptimizer} />
+            </Suspense>
           )}
           {activeTab === "optimizer" && (
             <Optimizer

@@ -9,6 +9,10 @@ const optimizerRoutes = require("./optimizerRoutes");
 const plansRoutes = require("./plansRoutes");
 const { runOptimizer } = require("../controllers/optimizerController");
 const { resetDemoData } = require("../controllers/plansController");
+const { getCorridorsList } = require("../controllers/corridorsController");
+
+// Corridors (Map & Network)
+router.get("/corridors", getCorridorsList);
 
 // Blocks
 router.use("/blocks", blockRoutes);

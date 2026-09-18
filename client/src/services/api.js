@@ -59,3 +59,10 @@ export async function resetDemoData() {
   }
   return data;
 }
+
+export async function fetchCorridors() {
+  const res = await fetch(`${API_BASE}/corridors`);
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  return res.json();
+}
+
