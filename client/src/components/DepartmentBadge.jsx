@@ -6,9 +6,9 @@ export default function DepartmentBadge({ department, showFullName = false }) {
       code: "TMS",
       title: "Track (Engineering)",
       short: "Track / TMS",
-      bg: "bg-[#1E293B]",
+      bg: "bg-[#071F4D]",
       text: "text-[#E2E8F0]",
-      border: "border-[#475569]"
+      border: "border-[#0B3D91]"
     },
     SMMS: {
       code: "SMMS",
@@ -32,9 +32,9 @@ export default function DepartmentBadge({ department, showFullName = false }) {
     code: department,
     title: department,
     short: department,
-    bg: "bg-[#312F30]",
-    text: "text-[#CCCCCC]",
-    border: "border-[#666666]"
+    bg: "bg-[#071F4D]",
+    text: "text-[#CBD5E1]",
+    border: "border-[#0B3D91]"
   };
 
   return (

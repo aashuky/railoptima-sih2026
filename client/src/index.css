@@ -4,8 +4,8 @@
 
 @layer base {
   body {
-    background-color: #F2F2F2;
-    color: #312F30;
+    background-color: #F5F7FA;
+    color: #1E293B;
     font-feature-settings: "tnum" on, "cv02" on, "cv03" on, "cv04" on;
   }
 
@@ -27,16 +27,16 @@
     border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #ED1B24;
+    background: #1976D2;
   }
 }
 
 .rail-glow {
-  box-shadow: 0 0 12px rgba(237, 27, 36, 0.25);
+  box-shadow: 0 0 12px rgba(25, 118, 210, 0.25);
 }
 
 .rail-border-active {
-  border-left: 4px solid #ED1B24;
+  border-left: 4px solid #1976D2;
 }
 
 /* Subtle ambient train movement across hero banner (scaled for 2.5x larger silhouette) */

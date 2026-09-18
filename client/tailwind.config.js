@@ -8,11 +8,19 @@ export default {
     extend: {
       colors: {
         rail: {
-          signalRed: "#ED1B24",
-          deepRed: "#B52229",
+          deepBlue: "#0B3D91",
+          navDark: "#071F4D",
+          skyBlue: "#1976D2",
+          aiPurple: "#7C3AED",
+          green: "#16A34A",
+          amber: "#F59E0B",
+          criticalRed: "#DC2626",
+          lightGray: "#F5F7FA",
+          cardWhite: "#FFFFFF",
+          darkNavy: "#172033",
+          signalRed: "#DC2626",
           charcoal: "#312F30",
           nearBlack: "#111111",
-          lightGray: "#F2F2F2",
           midGray: "#CCCCCC",
           gray: "#999999"
         }

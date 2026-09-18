@@ -3,10 +3,10 @@ import React from "react";
 export default function PriorityBadge({ priority }) {
   const configs = {
     High: {
-      bg: "bg-[#ED1B24]/15",
-      text: "text-[#ED1B24]",
-      border: "border-[#ED1B24]/40",
-      indicator: "bg-[#ED1B24]"
+      bg: "bg-[#DC2626]/15",
+      text: "text-[#DC2626]",
+      border: "border-[#DC2626]/40",
+      indicator: "bg-[#DC2626]"
     },
     Medium: {
       bg: "bg-[#F59E0B]/15",
