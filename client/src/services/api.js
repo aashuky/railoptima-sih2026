@@ -1,7 +1,7 @@
 // RailOptima API Service Layer
 // Communicates with Node.js Express backend on localhost:5000 (via Vite proxy or direct)
 
-const API_BASE = "/api";
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 function authHeaders() {
   const token = localStorage.getItem("railoptima_token");
