@@ -1,19 +1,14 @@
 {
-  "name": "railoptima-server",
+  "name": "railoptima-root",
   "version": "1.0.0",
-  "description": "RailOptima Backend Server",
-  "main": "server.js",
+  "private": true,
+  "description": "RailOptima - AI-Powered Automatic Block Planning for Indian Railways",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0",
-    "mongoose": "^8.18.0"
+    "server": "cd server && npm start",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "concurrently": "^9.1.2"
   }
 }

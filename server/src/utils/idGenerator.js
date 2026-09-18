@@ -1,12 +1,12 @@
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 
 /**
- * Old code used `Date.now().toString().slice(-4)` which collides whenever
- * two optimize calls land in the same millisecond-truncated window.
- * A uuid slice keeps IDs short but removes the collision risk.
+ * Generates collision-resistant short plan IDs using Node.js built-in crypto.randomUUID().
+ * Eliminates the external uuid package dependency.
  */
 function generatePlanId(blockId) {
-  return `PLAN-${blockId}-${uuidv4().slice(0, 8).toUpperCase()}`;
+  const uuid = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 10);
+  return `PLAN-${blockId}-${uuid.slice(0, 8).toUpperCase()}`;
 }
 
 module.exports = { generatePlanId };

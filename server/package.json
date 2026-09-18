@@ -2,6 +2,7 @@
   "name": "railoptima-server",
   "version": "1.0.0",
   "private": true,
+  "type": "commonjs",
   "description": "RailOptima Backend - Node.js Express REST API for Indian Railways Maintenance Block Planning",
   "main": "server.js",
   "scripts": {

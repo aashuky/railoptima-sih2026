@@ -1,8 +1,8 @@
 // Automated Backend Logic & Engine Test
-const { getTasks, getBlocks, resetData } = require("./src/data/seedData");
-const { calculateCompatibility } = require("./src/engine/compatibility");
-const { detectConflicts } = require("./src/engine/conflictDetector");
-const { optimizeBlockSchedule } = require("./src/engine/scheduler");
+const { getTasks, getBlocks, resetData } = require("./src/db");
+const { calculateCompatibility } = require("./src/services/compatibilityService");
+const { detectConflicts } = require("./src/services/conflictDetectorService");
+const { optimizeBlockSchedule } = require("./src/services/schedulerServices");
 
 console.log("--- 1. Testing Seed Data ---");
 const tasks = getTasks();
