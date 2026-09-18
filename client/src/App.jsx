@@ -1,14 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Dashboard from "./pages/Dashboard";
 import Optimizer from "./pages/Optimizer";
 import BlockPlans from "./pages/BlockPlans";
+import Login from "./pages/Login";
 import { ShieldCheck, RotateCcw } from "lucide-react";
 
 export default function App() {
+  // Always start from the login page on app launch
+  const [user, setUser] = useState(null);
+
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedTaskIdsForOptimizer, setSelectedTaskIdsForOptimizer] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
 
   const handleNavigateToOptimizer = (taskIds = []) => {
     setSelectedTaskIdsForOptimizer(taskIds);
@@ -24,6 +36,11 @@ export default function App() {
     setRefreshKey((k) => k + 1);
   };
 
+  // Render Login screen if user is not authenticated
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
     <div className="min-h-screen bg-[#F5F7FA] flex flex-col font-sans text-[#1E293B]">
       {/* Global Navigation Header with Rehearsal Reset Control */}
@@ -31,6 +48,8 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onResetComplete={handleResetComplete}
+        user={user}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Area */}

@@ -11,6 +11,6 @@ module.exports = {
   corsOrigin: process.env.CORS_ORIGIN || "*",
   rateLimit: {
     windowMs: toInt(process.env.RATE_LIMIT_WINDOW_MS, 15 * 60 * 1000), // 15 min
-    max: toInt(process.env.RATE_LIMIT_MAX, 100)
+    max: toInt(process.env.RATE_LIMIT_MAX, process.env.NODE_ENV === "production" ? 100 : 10000)
   }
 };

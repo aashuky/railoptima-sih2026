@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { RotateCcw, Activity, ShieldCheck, Layers, GitMerge, CalendarDays } from "lucide-react";
+import { RotateCcw, Activity, ShieldCheck, Layers, GitMerge, CalendarDays, LogOut, User } from "lucide-react";
 import { resetDemoData } from "../services/api";
+import logoCircle from "../assets/logo-circle.jpg";
 
-export default function Header({ activeTab, setActiveTab, onResetComplete }) {
+export default function Header({ activeTab, setActiveTab, onResetComplete, user, onLogout }) {
   const [resetting, setResetting] = useState(false);
   const [resetMessage, setResetMessage] = useState(null);
 
@@ -58,9 +59,11 @@ export default function Header({ activeTab, setActiveTab, onResetComplete }) {
         <div className="flex items-center justify-between h-16">
           {/* Logo & System Title */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#1976D2] rounded flex items-center justify-center font-black text-white text-xl tracking-tighter shadow-md">
-              RO
-            </div>
+            <img
+              src={logoCircle}
+              alt="RailOptima Emblem"
+              className="w-11 h-11 rounded-full object-cover shadow-md border border-[#1976D2]/60 bg-white p-0.5 flex-shrink-0"
+            />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-black text-xl tracking-tight text-white uppercase">
@@ -103,8 +106,20 @@ export default function Header({ activeTab, setActiveTab, onResetComplete }) {
             })}
           </nav>
 
-          {/* Right Action: Rehearsal Reset Demo Data Button */}
+          {/* Right Action: Rehearsal Reset Demo Data Button & User Controls */}
           <div className="flex items-center gap-3">
+            {user && (
+              <div className="hidden md:flex items-center gap-2 px-2.5 py-1 bg-[#071F4D] rounded border border-[#0B3D91] text-xs">
+                <div className="w-6 h-6 rounded-full bg-[#1976D2] flex items-center justify-center text-white font-bold text-[10px]">
+                  {user.employeeId ? user.employeeId.slice(-2) : "IR"}
+                </div>
+                <div className="text-left leading-tight">
+                  <div className="text-[#E2E8F0] font-semibold text-[11px] truncate max-w-[140px]">{user.name || user.employeeId}</div>
+                  <div className="text-[#94A3B8] text-[9.5px] uppercase tracking-wider">{user.role || "Controller"}</div>
+                </div>
+              </div>
+            )}
+
             <button
               onClick={handleReset}
               disabled={resetting}
@@ -112,8 +127,20 @@ export default function Header({ activeTab, setActiveTab, onResetComplete }) {
               title="Restores seed tasks (T001, T002, T003) and blocks to initial demo state"
             >
               <RotateCcw className={`w-3.5 h-3.5 ${resetting ? "animate-spin" : ""}`} />
-              {resetting ? "Resetting..." : "Reset Demo Data"}
+              <span className="hidden sm:inline">{resetting ? "Resetting..." : "Reset Demo Data"}</span>
+              <span className="sm:hidden">Reset</span>
             </button>
+
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#CBD5E1] hover:text-white bg-[#071F4D] hover:bg-[#DC2626]/80 border border-[#1976D2]/40 hover:border-[#DC2626] rounded transition-all cursor-pointer"
+                title="Sign out of RailOptima session"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden lg:inline">Sign Out</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -385,20 +385,20 @@ export default function Optimizer({ initialTaskIds = [], onPlanApproved }) {
                   <SimulatedComparison comparison={plan.simulatedComparison} />
 
                   {/* Human-in-the-Loop Approval Action Bar */}
-                  <div className="bg-[#F8FAFC] p-4 rounded border border-[#CBD5E1] flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div>
+                  <div className="bg-[#F8FAFC] p-4 rounded border border-[#CBD5E1] flex flex-col 2xl:flex-row items-start 2xl:items-center justify-between gap-3 overflow-hidden">
+                    <div className="flex-1 min-w-0 pr-2">
                       <div className="text-xs font-bold uppercase text-[#1E293B]">
                         Human-in-the-Loop Planner Verification
                       </div>
-                      <p className="text-[11px] text-[#64748B]">
+                      <p className="text-[11px] text-[#64748B] mt-0.5">
                         Review the compatibility breakdown and simulated operational impact before dispatching to COA.
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="flex items-center gap-2 w-full sm:w-auto self-end 2xl:self-center flex-shrink-0">
                       <button
                         onClick={handleReject}
-                        className="flex-1 sm:flex-none px-3 py-2 text-xs font-bold uppercase tracking-wider rounded bg-[#FFFFFF] hover:bg-[#F1F5F9] text-[#1E293B] border border-[#CBD5E1] transition-colors cursor-pointer"
+                        className="px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded bg-[#FFFFFF] hover:bg-[#F1F5F9] text-[#1E293B] border border-[#CBD5E1] transition-colors cursor-pointer flex-shrink-0"
                       >
                         Reset
                       </button>
@@ -406,10 +406,10 @@ export default function Optimizer({ initialTaskIds = [], onPlanApproved }) {
                       <button
                         onClick={handleApprovePlan}
                         disabled={approving}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2 text-xs font-bold uppercase tracking-wider rounded bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-50 text-white shadow-sm transition-all cursor-pointer"
+                        className="flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-50 text-white shadow-sm transition-all cursor-pointer whitespace-nowrap flex-shrink-0"
                       >
                         <Check className={`w-4 h-4 ${approving ? "animate-spin" : ""}`} />
-                        {approving ? "Approving..." : "Approve & Schedule Plan"}
+                        <span>{approving ? "Approving..." : "Approve & Schedule Plan"}</span>
                       </button>
                     </div>
                   </div>
