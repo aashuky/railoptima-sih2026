@@ -1,7 +1,7 @@
 import React from "react";
-import { CheckCircle2, ShieldCheck, AlertCircle, Info } from "lucide-react";
+import { CheckCircle2, ShieldCheck, AlertCircle, Info, Sparkles, WandSparkles } from "lucide-react";
 
-export default function ExplainabilityCard({ plan }) {
+export default function ExplainabilityCard({ plan, aiExplanation, aiLoading, aiError }) {
   if (!plan) return null;
 
   const {
@@ -37,7 +37,23 @@ export default function ExplainabilityCard({ plan }) {
             <Info className="w-3.5 h-3.5 text-[#7C3AED]" />
             Decision Rationale
           </div>
-          {explanation}
+          <p className="whitespace-pre-line">{aiExplanation || explanation}</p>
+          <div className="mt-3 flex items-center gap-2 border-t border-[#DDD6FE] pt-2 text-[10px] font-semibold uppercase tracking-wide text-[#6D28D9]">
+            {aiLoading ? (
+              <>
+                <WandSparkles className="h-3.5 w-3.5 animate-pulse" />
+                Gemini is translating verified rules...
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-3.5 w-3.5" />
+                {aiExplanation
+                  ? "Gemini explanation grounded in verified rules"
+                  : "Verified rule-engine explanation"}
+              </>
+            )}
+          </div>
+          {aiError && <p className="mt-2 text-[10px] text-[#92400E]">{aiError}</p>}
         </div>
 
         {/* Compatibility Factor Scoring Matrix (Genuinely sums to 100) */}

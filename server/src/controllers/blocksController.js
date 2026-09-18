@@ -1,9 +1,10 @@
 const db = require("../db");
 const asyncHandler = require("../middleware/asyncHandler");
 const { success } = require("../utils/response");
+const { scopeBlocks } = require("../middleware/roleAccess");
 
 const getBlocksList = asyncHandler(async (req, res) => {
-  let blocks = db.getBlocks();
+  let blocks = scopeBlocks(db.getBlocks(), req.user);
   const { corridor, status } = req.query;
 
   if (corridor) blocks = blocks.filter((b) => b.corridor.toLowerCase() === corridor.toLowerCase());

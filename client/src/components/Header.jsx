@@ -28,6 +28,7 @@ export default function Header({ activeTab, setActiveTab, onResetComplete, user,
     { id: "optimizer", label: "AI Block Optimizer", icon: GitMerge },
     { id: "plans", label: "Block Plans", icon: CalendarDays }
   ];
+  const canReset = user?.role === "admin";
 
   return (
     <header className="bg-[#0B3D91] text-white border-b border-[#071F4D] sticky top-0 z-40 shadow-sm">
@@ -112,25 +113,29 @@ export default function Header({ activeTab, setActiveTab, onResetComplete, user,
             {user && (
               <div className="hidden md:flex items-center gap-2 px-2.5 py-1 bg-[#071F4D] rounded border border-[#0B3D91] text-xs">
                 <div className="w-6 h-6 rounded-full bg-[#1976D2] flex items-center justify-center text-white font-bold text-[10px]">
-                  {user.employeeId ? user.employeeId.slice(-2) : "IR"}
+                  {user.name ? user.name.slice(0, 2).toUpperCase() : user.role ? user.role.slice(0, 2).toUpperCase() : "IR"}
                 </div>
                 <div className="text-left leading-tight">
-                  <div className="text-[#E2E8F0] font-semibold text-[11px] truncate max-w-[140px]">{user.name || user.employeeId}</div>
-                  <div className="text-[#94A3B8] text-[9.5px] uppercase tracking-wider">{user.role || "Controller"}</div>
+                  <div className="text-[#E2E8F0] font-semibold text-[11px] truncate max-w-[140px]">{user.name || user.email}</div>
+                  <div className="text-[#94A3B8] text-[9.5px] uppercase tracking-wider">
+                    {user.role}{user.department ? ` • ${user.department}` : ""}
+                  </div>
                 </div>
               </div>
             )}
 
-            <button
-              onClick={handleReset}
-              disabled={resetting}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white bg-[#071F4D] hover:bg-[#1976D2] border border-[#1976D2]/50 hover:border-[#1976D2] rounded transition-all disabled:opacity-50 cursor-pointer"
-              title="Restores seed tasks (T001, T002, T003) and blocks to initial demo state"
-            >
-              <RotateCcw className={`w-3.5 h-3.5 ${resetting ? "animate-spin" : ""}`} />
-              <span className="hidden sm:inline">{resetting ? "Resetting..." : "Reset Demo Data"}</span>
-              <span className="sm:hidden">Reset</span>
-            </button>
+            {canReset && (
+              <button
+                onClick={handleReset}
+                disabled={resetting}
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white bg-[#071F4D] hover:bg-[#1976D2] border border-[#1976D2]/50 hover:border-[#1976D2] rounded transition-all disabled:opacity-50 cursor-pointer"
+                title="Restores seed tasks (T001, T002, T003) and blocks to initial demo state"
+              >
+                <RotateCcw className={`w-3.5 h-3.5 ${resetting ? "animate-spin" : ""}`} />
+                <span className="hidden sm:inline">{resetting ? "Resetting..." : "Reset Demo Data"}</span>
+                <span className="sm:hidden">Reset</span>
+              </button>
+            )}
 
             {onLogout && (
               <button

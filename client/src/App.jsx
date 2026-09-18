@@ -5,6 +5,7 @@ import Optimizer from "./pages/Optimizer";
 import BlockPlans from "./pages/BlockPlans";
 import Login from "./pages/Login";
 import { ShieldCheck, RotateCcw } from "lucide-react";
+import { fetchCurrentUser } from "./services/api";
 
 // Lazy-load the Map tab to keep bundle small and page switches snappy
 const CorridorMap = React.lazy(() => import("./pages/CorridorMap"));
@@ -31,8 +32,8 @@ function MapSkeleton() {
 }
 
 export default function App() {
-  // Always start from the login page on app launch
   const [user, setUser] = useState(null);
+  const [authChecking, setAuthChecking] = useState(true);
 
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedTaskIdsForOptimizer, setSelectedTaskIdsForOptimizer] = useState([]);
@@ -43,8 +44,22 @@ export default function App() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("railoptima_token");
     setUser(null);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("railoptima_token");
+    if (!token) {
+      setAuthChecking(false);
+      return;
+    }
+
+    fetchCurrentUser(token)
+      .then((data) => setUser(data.user))
+      .catch(() => localStorage.removeItem("railoptima_token"))
+      .finally(() => setAuthChecking(false));
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -71,6 +86,18 @@ export default function App() {
     setRefreshKey((k) => k + 1);
   };
 
+  // Checking session
+  if (authChecking) {
+    return (
+      <div className="min-h-screen bg-[#071F4D] flex flex-col items-center justify-center gap-4 text-white">
+        <div className="h-12 w-12 rounded-xl border border-blue-300/30 bg-[#0B3D91] p-3 shadow-lg motion-lift">
+          <ShieldCheck className="h-full w-full animate-pulse text-sky-300" />
+        </div>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-200">Checking secure session</p>
+      </div>
+    );
+  }
+
   // Render Login screen if user is not authenticated
   if (!user) {
     return <Login onLogin={handleLogin} />;
@@ -92,22 +119,27 @@ export default function App() {
         <div key={activeTab} className="animate-page-enter">
           {activeTab === "dashboard" && (
             <Dashboard
+              user={user}
               onNavigateToOptimizer={handleNavigateToOptimizer}
               onNavigateToTab={handleNavigateToTab}
             />
           )}
           {activeTab === "map" && (
             <Suspense fallback={<MapSkeleton />}>
-              <CorridorMap onNavigateToOptimizer={handleNavigateToOptimizer} />
+              <CorridorMap
+                user={user}
+                onNavigateToOptimizer={handleNavigateToOptimizer}
+              />
             </Suspense>
           )}
           {activeTab === "optimizer" && (
             <Optimizer
+              user={user}
               initialTaskIds={selectedTaskIdsForOptimizer}
               onPlanApproved={handlePlanApproved}
             />
           )}
-          {activeTab === "plans" && <BlockPlans />}
+          {activeTab === "plans" && <BlockPlans user={user} />}
         </div>
       </main>
 

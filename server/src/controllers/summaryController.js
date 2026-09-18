@@ -1,10 +1,11 @@
 const db = require("../db");
 const asyncHandler = require("../middleware/asyncHandler");
 const { success } = require("../utils/response");
+const { scopeTasks, scopeBlocks } = require("../middleware/roleAccess");
 
 const getDashboardSummary = asyncHandler(async (req, res) => {
-  const tasks = db.getTasks();
-  const blocks = db.getBlocks();
+  const tasks = scopeTasks(db.getTasks(), req.user);
+  const blocks = scopeBlocks(db.getBlocks(), req.user);
   const corridors = db.getCorridors();
 
   const totalRequests = tasks.length;

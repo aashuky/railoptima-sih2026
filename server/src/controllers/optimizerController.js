@@ -3,6 +3,7 @@ const asyncHandler = require("../middleware/asyncHandler");
 const ApiError = require("../utils/ApiError");
 const { validateOptimizeRequest } = require("../validators/optimizeValidator");
 const { optimizeBlockSchedule } = require("../services/schedulerServices");
+const { scopeTasks, scopeBlocks } = require("../middleware/roleAccess");
 const runOptimizer = asyncHandler(async (req, res) => {
   const body = req.body || {};
 
@@ -12,8 +13,8 @@ const runOptimizer = asyncHandler(async (req, res) => {
   }
 
   const { taskIds } = body;
-  const allTasks = db.getTasks();
-  const allBlocks = db.getBlocks();
+  const allTasks = scopeTasks(db.getTasks(), req.user);
+  const allBlocks = scopeBlocks(db.getBlocks(), req.user);
 
   const targetTasks =
     Array.isArray(taskIds) && taskIds.length > 0

@@ -19,12 +19,15 @@ import {
   FilterX
 } from "lucide-react";
 
-export default function Dashboard({ onNavigateToOptimizer, onNavigateToTab }) {
+export default function Dashboard({ user, onNavigateToOptimizer, onNavigateToTab }) {
+  const isEngineer = user?.role === "engineer";
   const [summary, setSummary] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [departmentFilter, setDepartmentFilter] = useState("ALL");
+  const [departmentFilter, setDepartmentFilter] = useState(() =>
+    user?.role === "engineer" && user?.department ? user.department : "ALL"
+  );
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [corridorFilter, setCorridorFilter] = useState("ALL");
 
@@ -146,7 +149,9 @@ export default function Dashboard({ onNavigateToOptimizer, onNavigateToTab }) {
               </div>
             )}
             <span className="text-[11px] text-[#64748B] mt-1 block">
-              Across TMS, SMMS & TDMS
+              {isEngineer && user?.department
+                ? `Scoped to ${user.department}`
+                : "Across TMS, SMMS & TDMS"}
             </span>
           </div>
 
@@ -267,11 +272,17 @@ export default function Dashboard({ onNavigateToOptimizer, onNavigateToTab }) {
               </h2>
             </div>
             <span className="text-[11px] text-[#CBD5E1] font-mono">
-              Synchronized Multi-Department View
+              {isEngineer && user?.department
+                ? `${user.department} Department Scoped View`
+                : "Synchronized Multi-Department View"}
             </span>
           </div>
 
-          <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            className={`p-4 sm:p-6 grid grid-cols-1 ${
+              isEngineer ? "md:grid-cols-1 max-w-md mx-auto" : "md:grid-cols-3"
+            } gap-6`}
+          >
             {loading ? (
               [1, 2, 3].map((i) => (
                 <div
@@ -295,73 +306,79 @@ export default function Dashboard({ onNavigateToOptimizer, onNavigateToTab }) {
             ) : (
               <>
                 {/* TMS Panel */}
-                <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-md space-y-3">
-                  <div className="flex items-center justify-between">
-                    <DepartmentBadge department="TMS" showFullName />
-                    <span className="font-mono text-lg font-black text-[#0B3D91]">
-                      {summary?.departmentBreakdown?.TMS?.count ?? 0}
-                    </span>
+                {(!isEngineer || user?.department === "TMS") && (
+                  <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-md space-y-3">
+                    <div className="flex items-center justify-between">
+                      <DepartmentBadge department="TMS" showFullName />
+                      <span className="font-mono text-lg font-black text-[#0B3D91]">
+                        {summary?.departmentBreakdown?.TMS?.count ?? 0}
+                      </span>
+                    </div>
+                    <div className="w-full bg-[#E2E8F0] h-2 rounded-md overflow-hidden">
+                      <div
+                        className="bg-[#071F4D] h-2 rounded-md transition-all duration-500"
+                        style={{
+                          width: `${summary?.departmentBreakdown?.TMS?.percentOfTotal ?? 0}%`
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[11px] text-[#64748B]">
+                      <span>Pending: <strong className="text-[#D97706]">{summary?.departmentBreakdown?.TMS?.pending ?? 0}</strong></span>
+                      <span>Scheduled: <strong className="text-[#16A34A]">{summary?.departmentBreakdown?.TMS?.scheduled ?? 0}</strong></span>
+                      <span>Share: {summary?.departmentBreakdown?.TMS?.percentOfTotal ?? 0}%</span>
+                    </div>
                   </div>
-                  <div className="w-full bg-[#E2E8F0] h-2 rounded-md overflow-hidden">
-                    <div
-                      className="bg-[#071F4D] h-2 rounded-md transition-all duration-500"
-                      style={{
-                        width: `${summary?.departmentBreakdown?.TMS?.percentOfTotal ?? 0}%`
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[11px] text-[#64748B]">
-                    <span>Pending: <strong className="text-[#D97706]">{summary?.departmentBreakdown?.TMS?.pending ?? 0}</strong></span>
-                    <span>Scheduled: <strong className="text-[#16A34A]">{summary?.departmentBreakdown?.TMS?.scheduled ?? 0}</strong></span>
-                    <span>Share: {summary?.departmentBreakdown?.TMS?.percentOfTotal ?? 0}%</span>
-                  </div>
-                </div>
+                )}
 
                 {/* SMMS Panel */}
-                <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-md space-y-3">
-                  <div className="flex items-center justify-between">
-                    <DepartmentBadge department="SMMS" showFullName />
-                    <span className="font-mono text-lg font-black text-[#1976D2]">
-                      {summary?.departmentBreakdown?.SMMS?.count ?? 0}
-                    </span>
+                {(!isEngineer || user?.department === "SMMS") && (
+                  <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-md space-y-3">
+                    <div className="flex items-center justify-between">
+                      <DepartmentBadge department="SMMS" showFullName />
+                      <span className="font-mono text-lg font-black text-[#1976D2]">
+                        {summary?.departmentBreakdown?.SMMS?.count ?? 0}
+                      </span>
+                    </div>
+                    <div className="w-full bg-[#E2E8F0] h-2 rounded-md overflow-hidden">
+                      <div
+                        className="bg-[#1976D2] h-2 rounded-md transition-all duration-500"
+                        style={{
+                          width: `${summary?.departmentBreakdown?.SMMS?.percentOfTotal ?? 0}%`
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[11px] text-[#64748B]">
+                      <span>Pending: <strong className="text-[#D97706]">{summary?.departmentBreakdown?.SMMS?.pending ?? 0}</strong></span>
+                      <span>Scheduled: <strong className="text-[#16A34A]">{summary?.departmentBreakdown?.SMMS?.scheduled ?? 0}</strong></span>
+                      <span>Share: {summary?.departmentBreakdown?.SMMS?.percentOfTotal ?? 0}%</span>
+                    </div>
                   </div>
-                  <div className="w-full bg-[#E2E8F0] h-2 rounded-md overflow-hidden">
-                    <div
-                      className="bg-[#1976D2] h-2 rounded-md transition-all duration-500"
-                      style={{
-                        width: `${summary?.departmentBreakdown?.SMMS?.percentOfTotal ?? 0}%`
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[11px] text-[#64748B]">
-                    <span>Pending: <strong className="text-[#D97706]">{summary?.departmentBreakdown?.SMMS?.pending ?? 0}</strong></span>
-                    <span>Scheduled: <strong className="text-[#16A34A]">{summary?.departmentBreakdown?.SMMS?.scheduled ?? 0}</strong></span>
-                    <span>Share: {summary?.departmentBreakdown?.SMMS?.percentOfTotal ?? 0}%</span>
-                  </div>
-                </div>
+                )}
 
                 {/* TDMS Panel */}
-                <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-md space-y-3">
-                  <div className="flex items-center justify-between">
-                    <DepartmentBadge department="TDMS" showFullName />
-                    <span className="font-mono text-lg font-black text-[#D97706]">
-                      {summary?.departmentBreakdown?.TDMS?.count ?? 0}
-                    </span>
+                {(!isEngineer || user?.department === "TDMS") && (
+                  <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-md space-y-3">
+                    <div className="flex items-center justify-between">
+                      <DepartmentBadge department="TDMS" showFullName />
+                      <span className="font-mono text-lg font-black text-[#D97706]">
+                        {summary?.departmentBreakdown?.TDMS?.count ?? 0}
+                      </span>
+                    </div>
+                    <div className="w-full bg-[#E2E8F0] h-2 rounded-md overflow-hidden">
+                      <div
+                        className="bg-[#F59E0B] h-2 rounded-md transition-all duration-500"
+                        style={{
+                          width: `${summary?.departmentBreakdown?.TDMS?.percentOfTotal ?? 0}%`
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[11px] text-[#64748B]">
+                      <span>Pending: <strong className="text-[#D97706]">{summary?.departmentBreakdown?.TDMS?.pending ?? 0}</strong></span>
+                      <span>Scheduled: <strong className="text-[#16A34A]">{summary?.departmentBreakdown?.TDMS?.scheduled ?? 0}</strong></span>
+                      <span>Share: {summary?.departmentBreakdown?.TDMS?.percentOfTotal ?? 0}%</span>
+                    </div>
                   </div>
-                  <div className="w-full bg-[#E2E8F0] h-2 rounded-md overflow-hidden">
-                    <div
-                      className="bg-[#F59E0B] h-2 rounded-md transition-all duration-500"
-                      style={{
-                        width: `${summary?.departmentBreakdown?.TDMS?.percentOfTotal ?? 0}%`
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[11px] text-[#64748B]">
-                    <span>Pending: <strong className="text-[#D97706]">{summary?.departmentBreakdown?.TDMS?.pending ?? 0}</strong></span>
-                    <span>Scheduled: <strong className="text-[#16A34A]">{summary?.departmentBreakdown?.TDMS?.scheduled ?? 0}</strong></span>
-                    <span>Share: {summary?.departmentBreakdown?.TDMS?.percentOfTotal ?? 0}%</span>
-                  </div>
-                </div>
+                )}
               </>
             )}
           </div>
@@ -380,16 +397,22 @@ export default function Dashboard({ onNavigateToOptimizer, onNavigateToTab }) {
 
             {/* Filter controls */}
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <select
-                value={departmentFilter}
-                onChange={(e) => setDepartmentFilter(e.target.value)}
-                className="bg-[#0B3D91] text-white text-xs border border-[#1976D2]/40 rounded-md px-2.5 py-1 focus:outline-hidden focus:ring-1 focus:ring-[#1976D2]"
-              >
-                <option value="ALL">All Departments</option>
-                <option value="TMS">TMS (Track)</option>
-                <option value="SMMS">SMMS (Signals)</option>
-                <option value="TDMS">TDMS (Traction)</option>
-              </select>
+              {!isEngineer ? (
+                <select
+                  value={departmentFilter}
+                  onChange={(e) => setDepartmentFilter(e.target.value)}
+                  className="bg-[#0B3D91] text-white text-xs border border-[#1976D2]/40 rounded-md px-2.5 py-1 focus:outline-hidden focus:ring-1 focus:ring-[#1976D2]"
+                >
+                  <option value="ALL">All Departments</option>
+                  <option value="TMS">TMS (Track)</option>
+                  <option value="SMMS">SMMS (Signals)</option>
+                  <option value="TDMS">TDMS (Traction)</option>
+                </select>
+              ) : (
+                <span className="bg-[#0B3D91] text-sky-200 text-xs border border-[#1976D2]/40 rounded-md px-2.5 py-1 font-mono font-bold">
+                  {user?.department} Only
+                </span>
+              )}
 
               <select
                 value={statusFilter}

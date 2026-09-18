@@ -1,9 +1,10 @@
 const db = require("../db");
 const asyncHandler = require("../middleware/asyncHandler");
 const { success } = require("../utils/response");
+const { scopeTasks } = require("../middleware/roleAccess");
 
 const getMaintenanceTasks = asyncHandler(async (req, res) => {
-  let tasks = db.getTasks();
+  let tasks = scopeTasks(db.getTasks(), req.user);
   const { department, status, corridor } = req.query;
 
   if (department) tasks = tasks.filter((t) => t.department.toLowerCase() === department.toLowerCase());

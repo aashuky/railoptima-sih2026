@@ -88,7 +88,8 @@ const STATUS_COLORS = {
   }
 };
 
-export default function CorridorMap({ onNavigateToOptimizer }) {
+export default function CorridorMap({ user, onNavigateToOptimizer }) {
+  const isEngineer = user?.role === "engineer";
   const [corridors, setCorridors] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [blocks, setBlocks] = useState([]);
@@ -96,7 +97,9 @@ export default function CorridorMap({ onNavigateToOptimizer }) {
   const [error, setError] = useState(null);
 
   // Filter States
-  const [deptFilter, setDeptFilter] = useState("ALL");
+  const [deptFilter, setDeptFilter] = useState(() =>
+    user?.role === "engineer" && user?.department ? user.department : "ALL"
+  );
   const [priorityFilter, setPriorityFilter] = useState("ALL");
   const [corridorFilter, setCorridorFilter] = useState("ALL");
   const [timeframeFilter, setTimeframeFilter] = useState("ALL"); // ALL | overdue | week
@@ -614,7 +617,9 @@ export default function CorridorMap({ onNavigateToOptimizer }) {
             <span className="text-[11px] text-[#64748B]">Filtered / {tasks.length} Total</span>
           </div>
           <div className="mt-2 text-[10px] text-[#64748B]">
-            Across TMS, SMMS & TDMS departments
+            {isEngineer && user?.department
+              ? `Scoped to ${user.department} department`
+              : "Across TMS, SMMS & TDMS departments"}
           </div>
         </div>
 
@@ -660,7 +665,10 @@ export default function CorridorMap({ onNavigateToOptimizer }) {
 
             {/* Department Filter Pills */}
             <div className="inline-flex items-center bg-[#F1F5F9] p-0.5 rounded-md border border-[#CBD5E1]">
-              {["ALL", "TMS", "SMMS", "TDMS"].map((dept) => {
+              {(isEngineer && user?.department
+                ? [user.department]
+                : ["ALL", "TMS", "SMMS", "TDMS"]
+              ).map((dept) => {
                 const isSelected = deptFilter === dept;
                 return (
                   <button

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { fetchMaintenanceTasks, optimizeSchedule, approvePlan } from "../services/api";
+import { fetchMaintenanceTasks, optimizeSchedule, approvePlan, explainPlan } from "../services/api";
 import DepartmentBadge from "../components/DepartmentBadge";
 import PriorityBadge from "../components/PriorityBadge";
 import ExplainabilityCard from "../components/ExplainabilityCard";
@@ -20,7 +20,7 @@ import {
   RefreshCw
 } from "lucide-react";
 
-export default function Optimizer({ initialTaskIds = [], onPlanApproved }) {
+export default function Optimizer({ initialTaskIds = [], user, onPlanApproved }) {
   const [tasks, setTasks] = useState([]);
   const [selectedTaskIds, setSelectedTaskIds] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,6 +29,10 @@ export default function Optimizer({ initialTaskIds = [], onPlanApproved }) {
   const [plan, setPlan] = useState(null);
   const [error, setError] = useState(null);
   const [approvalSuccess, setApprovalSuccess] = useState(null);
+  const [aiExplanation, setAiExplanation] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
+  const canApprove = user?.role === "controller" || user?.role === "admin";
 
   // Load pending tasks
   const loadTasks = useCallback(async () => {
@@ -88,6 +92,17 @@ export default function Optimizer({ initialTaskIds = [], onPlanApproved }) {
       setApprovalSuccess(null);
       const res = await optimizeSchedule(selectedTaskIds);
       setPlan(res);
+      setAiExplanation(null);
+      setAiError(null);
+      setAiLoading(true);
+      explainPlan(res)
+        .then((aiRes) => setAiExplanation(aiRes.explanation))
+        .catch((err) =>
+          setAiError(
+            err.message || "Gemini explanation unavailable. Showing verified rule explanation."
+          )
+        )
+        .finally(() => setAiLoading(false));
     } catch (err) {
       console.error(err);
       setError(err.message || "Failed to generate optimized block schedule.");
@@ -119,6 +134,8 @@ export default function Optimizer({ initialTaskIds = [], onPlanApproved }) {
   const handleReject = useCallback(() => {
     setPlan(null);
     setApprovalSuccess(null);
+    setAiExplanation(null);
+    setAiError(null);
     setError(null);
   }, []);
 
@@ -442,7 +459,12 @@ export default function Optimizer({ initialTaskIds = [], onPlanApproved }) {
                   </div>
 
                   {/* Explainable AI Component (AI Purple Theme) */}
-                  <ExplainabilityCard plan={plan} />
+                  <ExplainabilityCard
+                    plan={plan}
+                    aiExplanation={aiExplanation}
+                    aiLoading={aiLoading}
+                    aiError={aiError}
+                  />
 
                   {/* Simulated Scenario Comparison */}
                   <SimulatedComparison comparison={plan.simulatedComparison} />
@@ -466,14 +488,20 @@ export default function Optimizer({ initialTaskIds = [], onPlanApproved }) {
                         Reset
                       </button>
 
-                      <button
-                        onClick={handleApprovePlan}
-                        disabled={approving}
-                        className="flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-50 text-white shadow-sm transition-all cursor-pointer whitespace-nowrap flex-shrink-0"
-                      >
-                        <Check className={`w-4 h-4 ${approving ? "animate-spin" : ""}`} />
-                        <span>{approving ? "Approving..." : "Approve & Schedule Plan"}</span>
-                      </button>
+                      {canApprove ? (
+                        <button
+                          onClick={handleApprovePlan}
+                          disabled={approving}
+                          className="flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-50 text-white shadow-sm transition-all cursor-pointer whitespace-nowrap flex-shrink-0"
+                        >
+                          <Check className={`w-4 h-4 ${approving ? "animate-spin" : ""}`} />
+                          <span>{approving ? "Approving..." : "Approve & Schedule Plan"}</span>
+                        </button>
+                      ) : (
+                        <span className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-[10px] font-bold uppercase tracking-wide text-amber-700">
+                          Controller approval required
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
