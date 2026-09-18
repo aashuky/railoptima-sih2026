@@ -81,7 +81,7 @@ export default function Header({ activeTab, setActiveTab, onResetComplete, user,
           </div>
 
           {/* Center Navigation Tabs */}
-          <nav className="flex items-center gap-1 bg-[#071F4D] p-1 rounded border border-[#0B3D91]">
+          <nav className="flex items-stretch gap-1 bg-[#071F4D] p-1 rounded border border-[#0B3D91]">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -90,7 +90,7 @@ export default function Header({ activeTab, setActiveTab, onResetComplete, user,
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded transition-all ${
+                  className={`flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded transition-all text-center self-stretch ${
                     isActive
                       ? isOptimizer
                         ? "bg-[#7C3AED] text-white shadow-sm"
@@ -100,8 +100,8 @@ export default function Header({ activeTab, setActiveTab, onResetComplete, user,
                       : "text-[#CBD5E1] hover:text-white hover:bg-[#0B3D91]/60"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isOptimizer && !isActive ? "text-[#C4B5FD]" : ""}`} />
-                  {item.label}
+                  <Icon className={`w-4 h-4 shrink-0 ${isOptimizer && !isActive ? "text-[#C4B5FD]" : ""}`} />
+                  <span className="leading-tight text-center">{item.label}</span>
                 </button>
               );
             })}
