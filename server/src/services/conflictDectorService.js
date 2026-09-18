@@ -7,26 +7,19 @@ function detectConflicts(tasks, block) {
   const conflicts = [];
 
   if (!tasks || tasks.length === 0) {
-    return {
-      hasConflicts: false,
-      conflicts: []
-    };
+    return { hasConflicts: false, conflicts: [] };
   }
 
-  // 1. Spatial Corridor Conflict
+  // 1. Spatial corridor conflict
   const corridorMap = new Map();
   tasks.forEach((task) => {
-    if (!corridorMap.has(task.corridor)) {
-      corridorMap.set(task.corridor, []);
-    }
+    if (!corridorMap.has(task.corridor)) corridorMap.set(task.corridor, []);
     corridorMap.get(task.corridor).push(task.id);
   });
 
   if (corridorMap.size > 1) {
     const details = [];
-    corridorMap.forEach((ids, corr) => {
-      details.push(`Corridor ${corr} (Tasks: ${ids.join(", ")})`);
-    });
+    corridorMap.forEach((ids, corr) => details.push(`Corridor ${corr} (Tasks: ${ids.join(", ")})`));
     conflicts.push({
       type: "CORRIDOR_MISMATCH",
       severity: "CRITICAL",
@@ -35,7 +28,7 @@ function detectConflicts(tasks, block) {
     });
   }
 
-  // 2. Block Corridor Alignment
+  // 2. Block corridor alignment
   if (block) {
     tasks.forEach((task) => {
       if (task.corridor !== block.corridor) {
@@ -48,7 +41,7 @@ function detectConflicts(tasks, block) {
       }
     });
 
-    // 3. Temporal Duration Overflow
+    // 3. Temporal duration overflow
     const totalDuration = tasks.reduce((sum, t) => sum + (Number(t.durationHours) || 0), 0);
     if (totalDuration > block.durationHours) {
       conflicts.push({
@@ -60,13 +53,11 @@ function detectConflicts(tasks, block) {
     }
   }
 
-  // 4. Duplicate Department Redundancy or Overlapping Track IDs
+  // 4. Track section congestion
   const sectionTracks = new Map();
   tasks.forEach((task) => {
     const key = `${task.corridor}-${task.trackId || "DEFAULT"}`;
-    if (!sectionTracks.has(key)) {
-      sectionTracks.set(key, []);
-    }
+    if (!sectionTracks.has(key)) sectionTracks.set(key, []);
     sectionTracks.get(key).push(task);
   });
 
@@ -81,10 +72,7 @@ function detectConflicts(tasks, block) {
     }
   });
 
-  return {
-    hasConflicts: conflicts.length > 0,
-    conflicts
-  };
+  return { hasConflicts: conflicts.length > 0, conflicts };
 }
 
 module.exports = { detectConflicts };

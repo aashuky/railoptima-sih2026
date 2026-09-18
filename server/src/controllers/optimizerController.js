@@ -1,68 +1,42 @@
-const { getTasks, getBlocks, savePlan } = require("../data/seedData");
-const { optimizeBlockSchedule } = require("../engine/scheduler");
+const db = require("../db");
+const asyncHandler = require("../middleware/asyncHandler");
+const ApiError = require("../utils/ApiError");
+const { validateOptimizeRequest } = require("../validators/optimizeValidator");
+const { optimizeBlockSchedule } = require("../services/schedulerServices");
+const runOptimizer = asyncHandler(async (req, res) => {
+  const body = req.body || {};
 
-function runOptimizer(req, res) {
-  try {
-    const { taskIds } = req.body || {};
-    const allTasks = getTasks();
-    const allBlocks = getBlocks();
+  const validationErrors = validateOptimizeRequest(body);
+  if (validationErrors.length > 0) {
+    throw new ApiError(400, "Invalid request body", validationErrors);
+  }
 
-    let targetTasks = [];
-    if (Array.isArray(taskIds) && taskIds.length > 0) {
-      targetTasks = allTasks.filter((t) => taskIds.includes(t.id));
-    } else {
-      // Default to pending tasks
-      targetTasks = allTasks.filter((t) => t.status === "Pending");
-    }
+  const { taskIds } = body;
+  const allTasks = db.getTasks();
+  const allBlocks = db.getBlocks();
 
-    if (targetTasks.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No valid pending tasks found to optimize."
-      });
-    }
+  const targetTasks =
+    Array.isArray(taskIds) && taskIds.length > 0
+      ? allTasks.filter((t) => taskIds.includes(t.id))
+      : allTasks.filter((t) => t.status === "Pending");
 
-    const plan = optimizeBlockSchedule(targetTasks, allBlocks);
+  if (targetTasks.length === 0) {
+    throw new ApiError(400, "No valid pending tasks found to optimize.");
+  }
 
-    if (!plan.success) {
-      return res.status(422).json({
-        success: false,
-        message: plan.message,
-        conflicts: plan.conflicts || []
-      });
-    }
+  const plan = optimizeBlockSchedule(targetTasks, allBlocks);
 
-    // Save in-memory plan so it can be approved
-    savePlan(plan);
-
-    return res.json({
-      success: true,
-      planId: plan.planId,
-      assignedTasks: plan.assignedTasks,
-      unassignedTasks: plan.unassignedTasks,
-      blockId: plan.blockId,
-      corridor: plan.corridor,
-      corridorName: plan.corridorName,
-      section: plan.section,
-      startTime: plan.startTime,
-      endTime: plan.endTime,
-      date: plan.date,
-      totalDuration: plan.totalDuration,
-      maxWindowHours: plan.maxWindowHours,
-      compatibilityScore: plan.compatibilityScore,
-      scoreBreakdown: plan.scoreBreakdown,
-      reasons: plan.reasons,
-      conflicts: plan.conflicts,
-      explanation: plan.explanation,
-      simulatedComparison: plan.simulatedComparison
-    });
-  } catch (error) {
-    return res.status(500).json({
+  if (!plan.success) {
+    return res.status(422).json({
       success: false,
-      message: "Optimization engine execution failed",
-      error: error.message
+      message: plan.message,
+      conflicts: plan.conflicts || []
     });
   }
-}
+
+  db.savePlan(plan);
+
+  return res.status(200).json(plan);
+});
 
 module.exports = { runOptimizer };

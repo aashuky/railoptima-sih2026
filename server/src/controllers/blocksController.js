@@ -1,29 +1,15 @@
-const { getBlocks } = require("../data/seedData");
+const db = require("../db");
+const asyncHandler = require("../middleware/asyncHandler");
+const { success } = require("../utils/response");
 
-function getBlocksList(req, res) {
-  try {
-    let blocks = getBlocks();
-    const { corridor, status } = req.query;
+const getBlocksList = asyncHandler(async (req, res) => {
+  let blocks = db.getBlocks();
+  const { corridor, status } = req.query;
 
-    if (corridor) {
-      blocks = blocks.filter((b) => b.corridor.toLowerCase() === corridor.toLowerCase());
-    }
-    if (status) {
-      blocks = blocks.filter((b) => b.status.toLowerCase() === status.toLowerCase());
-    }
+  if (corridor) blocks = blocks.filter((b) => b.corridor.toLowerCase() === corridor.toLowerCase());
+  if (status) blocks = blocks.filter((b) => b.status.toLowerCase() === status.toLowerCase());
 
-    return res.json({
-      success: true,
-      count: blocks.length,
-      blocks
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch blocks",
-      error: error.message
-    });
-  }
-}
+  return success(res, 200, { count: blocks.length, blocks });
+});
 
 module.exports = { getBlocksList };
