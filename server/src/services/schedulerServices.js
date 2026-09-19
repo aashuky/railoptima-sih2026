@@ -152,7 +152,7 @@ function optimizeBlockSchedule(tasks, availableBlocks) {
         blocksCount: manualBlocksCount,
         disruptionEvents: manualDisruptionsCount,
         totalClosureHours: manualDisruptionHours,
-        description: `${manualBlocksCount} independent line disconnections booked separately across multiple days.`
+        description: `${manualBlocksCount} independent line blocks booked separately across multiple days, halting traffic ${manualDisruptionsCount} separate times.`
       },
       aiOptimizedPlanning: {
         mode: "AI-Coordinated Single Block",
@@ -164,7 +164,9 @@ function optimizeBlockSchedule(tasks, availableBlocks) {
       impactSummary: {
         disruptionsAvoided: savedDisruptions,
         disruptionReductionPercent: manualDisruptionsCount > 0 ? Math.round((savedDisruptions / manualDisruptionsCount) * 100) : 0,
-        assetAvailabilityGainHours: Math.max(0, manualDisruptionHours - 1)
+        departmentsCombined: deptList.length,
+        recurringStoppagesAvoided: savedDisruptions,
+        assetAvailabilityGainHours: savedDisruptions
       }
     }
   };

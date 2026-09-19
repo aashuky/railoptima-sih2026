@@ -37,9 +37,9 @@ export default function SimulatedComparison({ comparison }) {
 
             <div className="mt-3 space-y-2.5">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-[#78350F]">Separate Block Bookings:</span>
+                <span className="text-[#78350F]">Block Bookings Required:</span>
                 <span className="font-mono font-bold text-sm text-[#92400E]">
-                  {manualPlanning.blocksCount} Blocks
+                  {manualPlanning.blocksCount} Separate Blocks
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
@@ -49,9 +49,9 @@ export default function SimulatedComparison({ comparison }) {
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-[#78350F]">Total Track Disconnection Time:</span>
+                <span className="text-[#78350F]">Total Line Block Duration:</span>
                 <span className="font-mono font-bold text-sm text-[#92400E]">
-                  {manualPlanning.totalClosureHours} Hours Cumulative
+                  {manualPlanning.totalClosureHours} Hours (Cumulative)
                 </span>
               </div>
             </div>
@@ -75,9 +75,9 @@ export default function SimulatedComparison({ comparison }) {
 
             <div className="mt-3 space-y-2.5">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-[#14532D]">Consolidated Block Windows:</span>
+                <span className="text-[#14532D]">Block Bookings Required:</span>
                 <span className="font-mono font-bold text-sm text-emerald-700">
-                  {aiOptimizedPlanning.blocksCount} Unified Block
+                  {aiOptimizedPlanning.blocksCount} Consolidated Block
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
@@ -87,9 +87,9 @@ export default function SimulatedComparison({ comparison }) {
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-[#14532D]">Possession Window Duration:</span>
+                <span className="text-[#14532D]">Total Line Block Duration:</span>
                 <span className="font-mono font-bold text-sm text-emerald-700">
-                  {aiOptimizedPlanning.totalClosureHours} Hours Window
+                  {aiOptimizedPlanning.totalClosureHours} Hours (Single Window)
                 </span>
               </div>
             </div>
@@ -113,12 +113,12 @@ export default function SimulatedComparison({ comparison }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#16A34A]" />
+            <CheckCircle className="w-4 h-4 text-emerald-400" />
             <span className="font-bold uppercase tracking-wider text-[#E2E8F0]">
-              Corridor Availability Gain:
+              Multi-Department Synergy:
             </span>
             <span className="font-mono font-bold text-sm text-emerald-300">
-              +{impactSummary.assetAvailabilityGainHours}h Available Track Time
+              {impactSummary.departmentsCombined || 3} Departments Synchronized in 1 Window
             </span>
           </div>
         </div>
